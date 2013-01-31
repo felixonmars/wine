@@ -730,7 +730,12 @@ static void X11DRV_FocusIn( HWND hwnd, XEvent *xev )
     if (event->detail == NotifyPointer) return;
     if (hwnd == GetDesktopWindow()) return;
 
-    if ((xic = X11DRV_get_ic( hwnd ))) XSetICFocus( xic );
+    if ((xic = X11DRV_get_ic( hwnd )))
+    {
+    	XSetICFocus( xic );
+    	X11DRV_UpdateCandidatePos( hwnd, xic );
+    }
+    
     if (use_take_focus)
     {
         if (hwnd == GetForegroundWindow()) clip_fullscreen_window( hwnd, FALSE );
