@@ -673,6 +673,7 @@ extern void X11DRV_SetupXIM(void) DECLSPEC_HIDDEN;
 extern void X11DRV_XIMLookupChars( const char *str, DWORD count ) DECLSPEC_HIDDEN;
 extern void X11DRV_ForceXIMReset(HWND hwnd) DECLSPEC_HIDDEN;
 extern void X11DRV_SetPreeditState(HWND hwnd, BOOL fOpen) DECLSPEC_HIDDEN;
+extern void X11DRV_UpdateCandidatePos(HWND hwnd, XIC xic);
 
 #define XEMBED_MAPPED  (1 << 0)
 
