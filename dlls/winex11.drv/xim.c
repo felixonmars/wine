@@ -598,3 +598,40 @@ XIC X11DRV_CreateIC(XIM xim, struct x11drv_win_data *data)
 
     return xic;
 }
+
+void X11DRV_UpdateCandidatePos(HWND hwnd, XIC xic)
+{
+    if (ximStyle & XIMPreeditPosition)
+    {
+        HWND focus = GetFocus();
+        if (focus)
+        {
+            Window dummy;
+            /* the focus window which was set in XCreateIC */
+            Window win = X11DRV_get_win_data(hwnd)->whole_window;
+            int origin_x, origin_y;
+            POINT point;
+            XPoint xpoint;
+            XVaNestedList preedit;
+
+            /* the focus window's position */
+            XTranslateCoordinates(thread_display(), win, root_window, 
+                0, 0, &origin_x, &origin_y, &dummy);
+            TRACE("origin_x = %d origin_y = %d\n", origin_x, origin_y);
+
+            GetCaretPos(&point);
+            /* the caret's position */
+            ClientToScreen(focus, &point);
+            TRACE("point.x = %d point.y = %d\n", point.x, point.y);
+
+            xpoint.x = point.x - origin_x;
+            /* FIXME: use the height of the font instead of 16 */
+            xpoint.y = point.y - origin_y + 16; 
+            TRACE("xpoint.x = %d xpoint.y = %d\n", xpoint.x, xpoint.y);
+
+            preedit = XVaCreateNestedList(0, XNSpotLocation, &xpoint, NULL);
+            XSetICValues(xic, XNPreeditAttributes, preedit, NULL);
+            XFree(preedit);
+        }
+    }
+}
