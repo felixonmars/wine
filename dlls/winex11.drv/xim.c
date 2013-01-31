@@ -608,7 +608,7 @@ void X11DRV_UpdateCandidatePos(HWND hwnd, XIC xic)
         {
             Window dummy;
             /* the focus window which was set in XCreateIC */
-            Window win = X11DRV_get_win_data(hwnd)->whole_window;
+            Window win = get_win_data(hwnd)->whole_window;
             int origin_x, origin_y;
             POINT point;
             XPoint xpoint;
